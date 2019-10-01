@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Super Coolor Picker</title>
+</head>
+<body>
+    <form action="#" method="post" name="styles">
+        <color-picker name="color" value="#6600ffff" required></color-picker>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.querySelector('form[name="styles"]').onsubmit = e => {
+            e.preventDefault();
+            console.log((new FormData(e.target)).get('color'));
+        }
+    </script>
+
+    <script src="./super-coolor-picker.js"></script>
+</body>
+</html>

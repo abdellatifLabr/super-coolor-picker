@@ -1,0 +1,19 @@
+{
+  "name": "super-coolor-picker",
+  "version": "1.0.0",
+  "description": "Custom color picker with HTML custom elements (Web Components)",
+  "main": "dist/super-coolor-picker.js",
+  "scripts": {
+    "serve": "webpack-dev-server",
+    "build": "npm run prod",
+    "prod": "webpack --mode production"
+  },
+  "keywords": ["color", "color picker"],
+  "author": "Labreche Abdellatif",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.1"
+  }
+}
