@@ -14,7 +14,7 @@ $ npm install super-coolor-picker
 <html>
     <body>
         ...
-        <script src="[download_path]/super-coolor-picker.min.js"></script>
+        <script src="https://unpkg.com/super-coolor-picker@1.0.0/dist/super-coolor-picker.js"></script>
     </body>
 </html>
 ```
