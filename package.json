@@ -1,8 +1,12 @@
 {
   "name": "super-coolor-picker",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "Custom color picker with HTML custom elements (Web Components)",
   "main": "dist/super-coolor-picker.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/labTifo/super-coolor-picker"
+  },
   "scripts": {
     "serve": "webpack-dev-server",
     "build": "npm run prod",
