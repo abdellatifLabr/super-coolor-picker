@@ -1,4 +1,4 @@
-![cover-light](./src/assets/cover-light.png)
+![cover-light](./cover-light.png)
 
 # Super Coolor Picker
 Custom color picker with HTML custom elements (Web components).
