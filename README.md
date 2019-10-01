@@ -1,6 +1,8 @@
 ![cover-light](./cover-light.png)
+[![npm version](https://badge.fury.io/js/super-coolor-picker.svg)](https://badge.fury.io/js/super-coolor-picker) ![github-issues](https://img.shields.io/github/issues/labTifo/super-coolor-picker) ![github-stars](https://img.shields.io/github/stars/labTifo/super-coolor-picker) ![github-license](https://img.shields.io/github/license/labTifo/super-coolor-picker)
 
 # Super Coolor Picker
+
 Custom color picker with HTML custom elements (Web components).
 
 
