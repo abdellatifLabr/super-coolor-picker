@@ -158,6 +158,14 @@ class CustomColorPicker extends HTMLElement {
         this.swatch = this.popover.querySelector('.swatch');
         this.colorInput = this.popover.querySelector('.hex-input input');
         this.rgbaInputContainer = this.popover.querySelector('.rgba-input');
+
+        // Binding events to the main scope
+        this.onPopoverClicked = this.onPopoverClicked.bind(this);
+        this.onColorBoxClicked = this.onColorBoxClicked.bind(this);
+        this.onColorInputClicked = this.onColorInputClicked.bind(this);
+        this.onColorInputKeyUp = this.onColorInputKeyUp.bind(this);
+        this.onRGBAInputClicked = this.onRGBAInputClicked.bind(this);
+        this.onRGBAInputKeyUp = this.onRGBAInputKeyUp.bind(this);
     }
 
     connectedCallback() {
@@ -172,43 +180,62 @@ class CustomColorPicker extends HTMLElement {
     }
 
     addEventListeners() {
-        this.popover.onclick = e => e.stopPropagation();
-        this.colorBox.onclick = e => {
-            this.calculatePosition(e.clientX, e.clientY);
-            this.togglePopover();
+        this.popover.addEventListener('click', this.onPopoverClicked);
+        this.colorBox.addEventListener('click', this.onColorBoxClicked);
+        this.colorInput.addEventListener('click', this.onColorInputClicked);
+        this.colorInput.addEventListener('keyup', this.onColorInputKeyUp);
+        Array.from(this.rgbaInputContainer.querySelectorAll('input'))
+            .forEach(input => {
+                input.addEventListener('click', this.onRGBAInputClicked);
+                input.addEventListener('keyup', this.onRGBAInputKeyUp);
+            });
+    }
+
+    onRGBAInputClicked(e) {
+        e.stopPropagation();
+    }
+
+    onRGBAInputKeyUp(e) {
+        if (e.key == 'Enter') {
+            const r = parseInt(this.rgbaInputContainer.querySelector('input[name="r"]').value);
+            const g = parseInt(this.rgbaInputContainer.querySelector('input[name="g"]').value);
+            const b = parseInt(this.rgbaInputContainer.querySelector('input[name="b"]').value);
+            const a = parseInt(this.rgbaInputContainer.querySelector('input[name="a"]').value);
+            const validation = (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) && (a >= 0 && a <= 255);
+            if (!validation) {
+                throw new Error(`'rgba(${r}, ${g}, ${b}, ${a})' is not a valid RGBA color.`);
+            }
+            const color = this.RGBAToHEX(r, g, b, a);
+            this.setAttribute('value', color);
         }
-        this.colorInput.onclick = e => e.stopPropagation();
-        this.colorInput.onkeyup = e => {
-            if (e.key == 'Enter') {
-                const color = this.colorInput.value;
-                if (!this.validateHEX(color)) {
-                    throw new Error(`'${color}' is not a HEX color.`);
-                }
-                this.setAttribute('value', color);
-                if (this.isNewColor(color)) {
-                    this.colors.push(color);
-                    this.attachColor(color);
-                }
-                this.checkColor(color);
+    }
+
+    onPopoverClicked(e) {
+        e.stopPropagation();
+    }
+
+    onColorBoxClicked(e) {
+        this.calculatePosition(e.clientX, e.clientY);
+        this.togglePopover();
+    }
+
+    onColorInputClicked(e) {
+        e.stopPropagation();
+    }
+
+    onColorInputKeyUp(e) {
+        if (e.key == 'Enter') {
+            const color = this.colorInput.value;
+            if (!this.validateHEX(color)) {
+                throw new Error(`'${color}' is not a HEX color.`);
             }
-        };
-        Array.from(this.rgbaInputContainer.querySelectorAll('input')).forEach(input => {
-            input.onclick = e => e.stopPropagation();
-            input.onkeyup = e =>{
-                if (e.key == 'Enter') {
-                    const r = parseInt(this.rgbaInputContainer.querySelector('input[name="r"]').value);
-                    const g = parseInt(this.rgbaInputContainer.querySelector('input[name="g"]').value);
-                    const b = parseInt(this.rgbaInputContainer.querySelector('input[name="b"]').value);
-                    const a = parseInt(this.rgbaInputContainer.querySelector('input[name="a"]').value);
-                    const validation = (r >= 0 && r <= 255) && (g >= 0 && g <= 255) && (b >= 0 && b <= 255) && (a >= 0 && a <= 255);
-                    if (!validation) {
-                        throw new Error(`'rgba(${r}, ${g}, ${b}, ${a})' is not a valid RGBA color.`);
-                    }
-                    const color = this.RGBAToHEX(r, g, b, a);
-                    this.setAttribute('value', color);
-                }
+            this.setAttribute('value', color);
+            if (this.isNewColor(color)) {
+                this.colors.push(color);
+                this.attachColor(color);
             }
-        });
+            this.checkColor(color);
+        }
     }
 
     parseColorsArrayFromAttribute() {
@@ -238,7 +265,13 @@ class CustomColorPicker extends HTMLElement {
     }
 
     validateHEX(color) {
-        return new RegExp(/^#[0-9A-F]{6,8}$/i).test(color);
+        if (color.length == 9) {
+            return new RegExp(/^#[0-9A-F]{8}$/i).test(color);
+        } else if (color.length == 7) {
+            return new RegExp(/^#[0-9A-F]{6}$/i).test(color);
+        } else {
+            return false;
+        }
     }
 
     validateRGBA(color) {
@@ -255,8 +288,15 @@ class CustomColorPicker extends HTMLElement {
 
     removeEventListeners() {
         this.removeEventListener('click');
-        this.colorInput.removeEventListener('click');
-        this.colorInput.removeEventListener('keyup');
+        this.popover.removeEventListener('click', this.onPopoverClicked);
+        this.colorBox.removeEventListener('click', this.onColorBoxClicked);
+        this.colorInput.removeEventListener('click', this.onColorInputClicked);
+        this.colorInput.removeEventListener('keyup', this.onColorInputKeyUp);
+        Array.from(this.rgbaInputContainer.querySelectorAll('input'))
+            .forEach(input => {
+                input.removeEventListener('click', this.onRGBAInputClicked);
+                input.removeEventListener('keyup', this.onRGBAInputKeyUp);
+            });
     }
 
     static get observedAttributes() {
