@@ -191,6 +191,14 @@ export class CustomColorPicker extends HTMLElement {
             });
     }
 
+    get value() {
+        return this.value;
+    }
+
+    set value(val) {
+        this.value = val || '';
+    }
+
     onRGBAInputClicked(e) {
         e.stopPropagation();
     }
