@@ -145,7 +145,7 @@ template.innerHTML = /* html */`
     </div>
 `;
 
-class CustomColorPicker extends HTMLElement {
+export class CustomColorPicker extends HTMLElement {
     constructor() {
         super();
         this.setupFormAssociation();
